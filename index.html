@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Tab Page</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="split left">
+            <div class="section todo">
+                <h2>ToDoリスト</h2>
+                <input type="text" id="todoInput" placeholder="ToDoを追加">
+                <button id="addTodo" onclick="addTodo()">追加</button>
+                <ul id="todoList"></ul>
+            </div>
+        </div>
+        <div class="split right">
+            <div class="section memo">
+                <h2>メモ</h2>
+                <textarea id="memoInput" placeholder="メモを入力"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="section project full">
+            <h2>プロジェクト管理</h2>
+            <input type="text" id="projectInput" placeholder="プロジェクトを追加">
+            <button onclick="addProject()">追加</button>
+            <ul id="projectList"></ul>
+            <div id="taskContainer">
+                <p>プロジェクトを選択してください</p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
