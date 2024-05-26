@@ -1,40 +1,123 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Tab Page</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <div class="split left">
-            <div class="section todo">
-                <h2>ToDoリスト</h2>
-                <input type="text" id="todoInput" placeholder="ToDoを追加">
-                <button id="addTodo" onclick="addTodo()">追加</button>
-                <ul id="todoList"></ul>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>New Tab Page</title>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="split left">
+                <div class="section todo">
+                    <h2>ToDoリスト</h2>
+                    <input type="text" id="todoInput" placeholder="ToDoを追加">
+                    <button id="addTodo" onclick="addTodo()">追加</button>
+                    <ul id="todoList"></ul>
+                </div>
+            </div>
+            <div class="split right">
+                <div class="section memo">
+                    <h2>メモ</h2>
+                    <textarea id="memoInput" placeholder="メモを入力"></textarea>
+                </div>
             </div>
         </div>
-        <div class="split right">
-            <div class="section memo">
-                <h2>メモ</h2>
-                <textarea id="memoInput" placeholder="メモを入力"></textarea>
+        <div class="container">
+            <div class="section project full">
+                <h2>プロジェクト管理</h2>
+                <input type="text" id="projectInput" placeholder="プロジェクトを追加">
+                <button onclick="addProject()">追加</button>
+                <ul id="projectList"></ul>
+                <div id="taskContainer">
+                    <p>プロジェクトを選択してください</p>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="container">
-        <div class="section project full">
-            <h2>プロジェクト管理</h2>
-            <input type="text" id="projectInput" placeholder="プロジェクトを追加">
-            <button onclick="addProject()">追加</button>
-            <ul id="projectList"></ul>
-            <div id="taskContainer">
-                <p>プロジェクトを選択してください</p>
+        <div class="container">
+            <div id="schedule" class="section schedule full">
+                <h2>今日の予定</h2>
+                <div class="schedule-input">
+                    <input type="time" id="timeInput" placeholder="時間を入力">
+                    <input type="text" id="descriptionInput" placeholder="説明を入力">
+                    <button onclick="addSchedule()" id="add-schedule">追加</button>
+                </div>
+                <ul id="scheduleList"></ul>
             </div>
         </div>
-    </div>
-    <script src="script.js"></script>
-</body>
+        <script> 
+            function addSchedule() {
+                const timeInput = document.getElementById('timeInput').value;
+                const descriptionInput = document.getElementById('descriptionInput').value;
+
+                // 入力が空でないことを確認
+                if (timeInput.trim() === '' || descriptionInput.trim() === '') {
+                    alert('時間と説明を入力してください。');
+                    return;
+                }
+
+                // 新しい予定オブジェクトを作成
+                const newSchedule = {
+                    time: timeInput,
+                    description: descriptionInput
+                };
+
+                // ローカルストレージから予定を取得
+                const scheduleData = JSON.parse(localStorage.getItem('schedule')) || [];
+
+                // 予定を追加
+                scheduleData.push(newSchedule);
+
+                // ローカルストレージに予定を保存
+                localStorage.setItem('schedule', JSON.stringify(scheduleData));
+
+                // 予定の表示を更新
+                updateScheduleList(scheduleData);
+
+                // 入力フィールドをクリア
+                document.getElementById('timeInput').value = '';
+                document.getElementById('descriptionInput').value = '';
+            }
+
+            // 予定を削除する関数
+            function deleteSchedule(index) {
+                // ローカルストレージから予定を取得
+                const scheduleData = JSON.parse(localStorage.getItem('schedule')) || [];
+
+                // 指定されたインデックスの予定を削除
+                scheduleData.splice(index, 1);
+
+                // ローカルストレージに予定を保存
+                localStorage.setItem('schedule', JSON.stringify(scheduleData));
+
+                // 予定の表示を更新
+                updateScheduleList(scheduleData);
+            }
+
+            function updateScheduleList(scheduleData) {
+                const scheduleList = document.getElementById('scheduleList');
+                scheduleList.innerHTML = ''; // リストをクリア
+
+                // 予定を表示
+                scheduleData.forEach((item, index) => {
+
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${item.time} ${item.description}`;
+                    listItem.classList.add('schedule-item');
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = '削除';
+                    deleteButton.addEventListener('click', () => deleteSchedule(index));
+                    deleteButton.className = 'delete-button'; // クラスを追加
+
+                    
+                    listItem.appendChild(deleteButton);
+                    scheduleList.appendChild(listItem);
+                });
+            }
+        </script>
+        <script src="script.js"></script>
+    </body>
 </html>

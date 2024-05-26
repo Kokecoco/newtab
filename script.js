@@ -24,6 +24,15 @@ window.onload = () => {
 
     // プロジェクトの復元
     projects.forEach(project => addProjectToList(project));
+
+    // 毎日の予定をローカルストレージから取得する
+    const scheduleData = JSON.parse(localStorage.getItem('schedule')) || [];
+
+    // 予定を現在時刻に近い順にソートする
+    scheduleData.sort((a, b) => new Date(a.time) - new Date(b.time));
+
+    // 予定の表示を更新
+    updateScheduleList(scheduleData);
 };
 
 function addTodo() {
